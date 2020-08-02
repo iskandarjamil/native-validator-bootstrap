@@ -746,6 +746,8 @@ var Validator_Validator = /*#__PURE__*/function () {
   }, {
     key: "handleFormSubmit",
     value: function handleFormSubmit(e) {
+      var _this5 = this;
+
       this.runAllValidation();
 
       if (this.state.showValid) {
@@ -755,7 +757,9 @@ var Validator_Validator = /*#__PURE__*/function () {
       if (this.hasError()) {
         e.preventDefault();
         this.setSubmitDisabled();
-        this.focusFirstError();
+        setTimeout(function () {
+          _this5.focusFirstError();
+        }, 500);
         return false;
       }
 
@@ -792,30 +796,32 @@ var Validator_Validator = /*#__PURE__*/function () {
   }, {
     key: "handleKeyup",
     value: function handleKeyup(e) {
-      var _this5 = this;
+      var _this6 = this;
 
+      var target = e.target;
       clearTimeout(this.timerTyping);
       this.timerTyping = setTimeout(function () {
-        _this5.validateEach(e.target);
+        _this6.validateEach(target);
       }, this.delay);
     }
   }, {
     key: "handleChange",
     value: function handleChange(e) {
-      var _this6 = this;
+      var _this7 = this;
 
+      var target = e.target;
       clearTimeout(this.timerChange);
       this.timerChange = setTimeout(function () {
-        _this6.validateEach(e.target);
+        _this7.validateEach(target);
       }, this.delay);
     }
   }, {
     key: "runAllValidation",
     value: function runAllValidation() {
-      var _this7 = this;
+      var _this8 = this;
 
       this.$fields.forEach(function (el) {
-        _this7.validateEach(el);
+        _this8.validateEach(el);
       });
     }
   }, {
@@ -864,8 +870,19 @@ var Validator_Validator = /*#__PURE__*/function () {
     key: "setError",
     value: function setError(el) {
       var $parent = getClosest(el, ".form-group");
+      var $siblings = this.getSiblings($parent);
       el.classList.add("is-invalid");
       el.classList.remove("is-valid");
+
+      if ($siblings.length > 1) {
+        for (var index = 0; index < $siblings.length; index++) {
+          $siblings[index].classList.add("is-invalid");
+          $siblings[index].classList.remove("is-valid");
+        }
+      } else {
+        el.classList.add("is-invalid");
+        el.classList.remove("is-valid");
+      }
 
       if ($parent) {
         $parent.classList.remove("is-valid");
@@ -878,10 +895,22 @@ var Validator_Validator = /*#__PURE__*/function () {
     key: "clearError",
     value: function clearError(el) {
       var $parent = getClosest(el, ".form-group");
-      el.classList.remove("is-invalid");
+      var $siblings = this.getSiblings($parent);
 
-      if (this.state.showValid) {
-        el.classList.add("is-valid");
+      if ($siblings.length > 1) {
+        for (var index = 0; index < $siblings.length; index++) {
+          $siblings[index].classList.remove("is-invalid");
+
+          if (this.state.showValid) {
+            $siblings[index].classList.add("is-valid");
+          }
+        }
+      } else {
+        el.classList.remove("is-invalid");
+
+        if (this.state.showValid) {
+          el.classList.add("is-valid");
+        }
       }
 
       if ($parent) {
@@ -925,11 +954,10 @@ var Validator_Validator = /*#__PURE__*/function () {
   }, {
     key: "focusFirstError",
     value: function focusFirstError() {
-      var _this8 = this;
+      var _this9 = this;
 
       var $parent;
       var el = this.getErrors();
-      var items = [];
 
       if (this.isFocusing) {
         return;
@@ -943,17 +971,19 @@ var Validator_Validator = /*#__PURE__*/function () {
       $parent = getClosest(el, ".form-group");
 
       if ($parent) {
-        if ($parent.querySelector("input")) {
-          $parent.querySelector("input").focus();
-        }
+        setTimeout(function () {
+          if ($parent.querySelector("input")) {
+            $parent.querySelector("input").focus();
+          }
 
-        if ($parent.querySelector("select")) {
-          $parent.querySelector("select").focus();
-        }
+          if ($parent.querySelector("select")) {
+            $parent.querySelector("select").focus();
+          }
 
-        if ($parent.querySelector("textarea")) {
-          $parent.querySelector("textarea").focus();
-        }
+          if ($parent.querySelector("textarea")) {
+            $parent.querySelector("textarea").focus();
+          }
+        }, this.delay);
 
         if (this.state.autoScroll) {
           this.isFocusing = true;
@@ -962,10 +992,27 @@ var Validator_Validator = /*#__PURE__*/function () {
             behavior: "smooth"
           });
           setTimeout(function () {
-            _this8.isFocusing = false;
+            _this9.isFocusing = false;
           }, 500);
         }
       }
+    }
+  }, {
+    key: "getSiblings",
+    value: function getSiblings(target) {
+      var elements = this.selectorElement.split(",");
+      var selector = this.state.selector.split(":input")[1];
+      var $items = [];
+
+      for (var i = 0; i < elements.length; i++) {
+        target.querySelectorAll(elements[i].trim() + selector).forEach(function (el) {
+          if (el.offsetParent !== null) {
+            $items.push(el);
+          }
+        });
+      }
+
+      return $items;
     }
   }, {
     key: "getErrors",

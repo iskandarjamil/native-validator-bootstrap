@@ -155,7 +155,10 @@ export default class Validator {
     if (this.hasError()) {
       e.preventDefault();
       this.setSubmitDisabled();
-      this.focusFirstError();
+
+      setTimeout(() => {
+        this.focusFirstError();
+      }, 500);
 
       return false;
     }
@@ -185,15 +188,17 @@ export default class Validator {
     this.validateEach(e.target);
   }
   handleKeyup(e) {
+    const target = e.target;
     clearTimeout(this.timerTyping);
     this.timerTyping = setTimeout(() => {
-      this.validateEach(e.target);
+      this.validateEach(target);
     }, this.delay);
   }
   handleChange(e) {
+    const target = e.target;
     clearTimeout(this.timerChange);
     this.timerChange = setTimeout(() => {
-      this.validateEach(e.target);
+      this.validateEach(target);
     }, this.delay);
   }
 
@@ -240,9 +245,20 @@ export default class Validator {
   }
   setError(el) {
     let $parent = getClosest(el, ".form-group");
+    let $siblings = this.getSiblings($parent);
 
     el.classList.add("is-invalid");
     el.classList.remove("is-valid");
+
+    if ($siblings.length > 1) {
+      for (let index = 0; index < $siblings.length; index++) {
+        $siblings[index].classList.add("is-invalid");
+        $siblings[index].classList.remove("is-valid");
+      }
+    } else {
+      el.classList.add("is-invalid");
+      el.classList.remove("is-valid");
+    }
 
     if ($parent) {
       $parent.classList.remove("is-valid");
@@ -253,11 +269,22 @@ export default class Validator {
   }
   clearError(el) {
     let $parent = getClosest(el, ".form-group");
+    let $siblings = this.getSiblings($parent);
 
-    el.classList.remove("is-invalid");
+    if ($siblings.length > 1) {
+      for (let index = 0; index < $siblings.length; index++) {
+        $siblings[index].classList.remove("is-invalid");
 
-    if (this.state.showValid) {
-      el.classList.add("is-valid");
+        if (this.state.showValid) {
+          $siblings[index].classList.add("is-valid");
+        }
+      }
+    } else {
+      el.classList.remove("is-invalid");
+
+      if (this.state.showValid) {
+        el.classList.add("is-valid");
+      }
     }
 
     if ($parent) {
@@ -296,7 +323,6 @@ export default class Validator {
   focusFirstError() {
     let $parent;
     let el = this.getErrors();
-    let items = [];
 
     if (this.isFocusing) {
       return;
@@ -309,15 +335,17 @@ export default class Validator {
 
     $parent = getClosest(el, ".form-group");
     if ($parent) {
-      if ($parent.querySelector("input")) {
-        $parent.querySelector("input").focus();
-      }
-      if ($parent.querySelector("select")) {
-        $parent.querySelector("select").focus();
-      }
-      if ($parent.querySelector("textarea")) {
-        $parent.querySelector("textarea").focus();
-      }
+      setTimeout(() => {
+        if ($parent.querySelector("input")) {
+          $parent.querySelector("input").focus();
+        }
+        if ($parent.querySelector("select")) {
+          $parent.querySelector("select").focus();
+        }
+        if ($parent.querySelector("textarea")) {
+          $parent.querySelector("textarea").focus();
+        }
+      }, this.delay);
 
       if (this.state.autoScroll) {
         this.isFocusing = true;
@@ -336,6 +364,21 @@ export default class Validator {
     }
   }
 
+  getSiblings(target) {
+    let elements = this.selectorElement.split(",");
+    let selector = this.state.selector.split(":input")[1];
+    let $items = [];
+
+    for (let i = 0; i < elements.length; i++) {
+      target.querySelectorAll(elements[i].trim() + selector).forEach((el) => {
+        if (el.offsetParent !== null) {
+          $items.push(el);
+        }
+      });
+    }
+
+    return $items;
+  }
   getErrors() {
     let el = this.$target.querySelectorAll(":invalid");
     let items = [];
