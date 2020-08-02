@@ -39,7 +39,7 @@ Add `data-pluginname` and `data-pluginname-error` for error message.
 import Validator from "native-validator-bootstrap";
 
 Validator.plugin("numberonly", {
-  // Optional if want to run sometime once the Validator created.
+  // Optional if want to run something once the Validator created.
   install(el) {},
   // Required, return True/False
   validate(el, attribute) {
