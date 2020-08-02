@@ -747,12 +747,15 @@ var Validator_Validator = /*#__PURE__*/function () {
     key: "handleFormSubmit",
     value: function handleFormSubmit(e) {
       this.runAllValidation();
-      this.$target.classList.add("was-validated");
+
+      if (this.state.showValid) {
+        this.$target.classList.add("was-validated");
+      }
 
       if (this.hasError()) {
         e.preventDefault();
-        this.setSubmitDisabled(); // this.focusFirstError();
-
+        this.setSubmitDisabled();
+        this.focusFirstError();
         return false;
       }
 
