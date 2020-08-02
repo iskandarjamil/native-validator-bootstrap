@@ -1,0 +1,22 @@
+{
+  "name": "native-validator-bootstrap",
+  "version": "0.0.1",
+  "description": "Native JavaScript Form Validator for Bootstrap 4, pure JavasSript solution without jQuery.",
+  "main": "dist/validator.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Iskandar Jamil <iskandar.jamil@yahoo.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.11.0",
+    "@babel/preset-env": "^7.11.0",
+    "babel-loader": "^8.1.0",
+    "uglifyjs-webpack-plugin": "^2.2.0",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
+  },
+  "dependencies": {
+    "lodash.debounce": "^4.0.8"
+  }
+}
