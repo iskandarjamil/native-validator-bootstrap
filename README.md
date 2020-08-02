@@ -1,4 +1,4 @@
-![GitHub](https://img.shields.io/github/license/iskandarjamil/native-validator-bootstrap) ![npm](https://img.shields.io/npm/v/native-validator-bootstrap) ![GitHub file size in bytes](https://img.shields.io/github/size/iskandarjamil/native-validator-bootstrap/dist/validator.min.js)
+![NPM](https://img.shields.io/npm/l/native-validator-bootstrap) ![npm](https://img.shields.io/npm/v/native-validator-bootstrap?label=version) ![npm bundle size](https://img.shields.io/bundlephobia/min/native-validator-bootstrap?label=size) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/native-validator-bootstrap?label=gzip)
 
 # Native Validator Bootstrap
 

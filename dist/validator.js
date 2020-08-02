@@ -1,5 +1,5 @@
 /*!
- * native-validator-bootstrap v0.0.1
+ * native-validator-bootstrap v0.0.2
  * Copyright 2020 Iskandar Jamil <iskandar.jamil@yahoo.com>
  */
 (function webpackUniversalModuleDefinition(root, factory) {
