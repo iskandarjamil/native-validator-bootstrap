@@ -1,4 +1,4 @@
-![GitHub](https://img.shields.io/github/license/iskandarjamil/native-validator-bootstrap) ![GitHub release (latest by date)](https://img.shields.io/github/v/release/iskandarjamil/native-validator-bootstrap) ![GitHub file size in bytes](https://img.shields.io/github/size/iskandarjamil/native-validator-bootstrap/dist/validator.min.js)
+![GitHub](https://img.shields.io/github/license/iskandarjamil/native-validator-bootstrap) ![npm](https://img.shields.io/npm/v/native-validator-bootstrap) ![GitHub file size in bytes](https://img.shields.io/github/size/iskandarjamil/native-validator-bootstrap/dist/validator.min.js)
 
 # Native Validator Bootstrap
 
