@@ -247,31 +247,22 @@ export default class Validator {
     let $parent = getClosest(el, ".form-group");
     let $siblings = this.getSiblings($parent);
 
-    if (this.state.showValid) {
-      el.classList.add("is-invalid");
-    }
+    el.classList.add("is-invalid");
     el.classList.remove("is-valid");
 
     if ($siblings.length > 1) {
       for (let index = 0; index < $siblings.length; index++) {
-        if (this.state.showValid) {
-          $siblings[index].classList.add("is-invalid");
-        }
+        $siblings[index].classList.add("is-invalid");
         $siblings[index].classList.remove("is-valid");
       }
     } else {
-      if (this.state.showValid) {
-        el.classList.add("is-invalid");
-      }
+      el.classList.add("is-invalid");
       el.classList.remove("is-valid");
     }
 
     if ($parent) {
       $parent.classList.remove("is-valid");
-
-      if (this.state.showValid) {
-        $parent.classList.add("is-invalid");
-      }
+      $parent.classList.add("is-invalid");
     }
     this.displayError(el);
   }
