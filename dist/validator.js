@@ -1,5 +1,5 @@
 /*!
- * native-validator-bootstrap v0.0.2
+ * native-validator-bootstrap v0.0.3
  * Copyright 2020 Iskandar Jamil <iskandar.jamil@yahoo.com>
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -871,22 +871,35 @@ var Validator_Validator = /*#__PURE__*/function () {
     value: function setError(el) {
       var $parent = getClosest(el, ".form-group");
       var $siblings = this.getSiblings($parent);
-      el.classList.add("is-invalid");
+
+      if (this.state.showValid) {
+        el.classList.add("is-invalid");
+      }
+
       el.classList.remove("is-valid");
 
       if ($siblings.length > 1) {
         for (var index = 0; index < $siblings.length; index++) {
-          $siblings[index].classList.add("is-invalid");
+          if (this.state.showValid) {
+            $siblings[index].classList.add("is-invalid");
+          }
+
           $siblings[index].classList.remove("is-valid");
         }
       } else {
-        el.classList.add("is-invalid");
+        if (this.state.showValid) {
+          el.classList.add("is-invalid");
+        }
+
         el.classList.remove("is-valid");
       }
 
       if ($parent) {
         $parent.classList.remove("is-valid");
-        $parent.classList.add("is-invalid");
+
+        if (this.state.showValid) {
+          $parent.classList.add("is-invalid");
+        }
       }
 
       this.displayError(el);
@@ -915,7 +928,10 @@ var Validator_Validator = /*#__PURE__*/function () {
 
       if ($parent) {
         $parent.classList.remove("is-invalid");
-        $parent.classList.add("is-valid");
+
+        if (this.state.showValid) {
+          $parent.classList.add("is-valid");
+        }
 
         if ($parent.querySelector(".invalid-feedback")) {
           $parent.querySelector(".invalid-feedback").textContent = "";
