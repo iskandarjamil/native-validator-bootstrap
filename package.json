@@ -1,6 +1,6 @@
 {
   "name": "native-validator-bootstrap",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Native JavaScript Form Validator for Bootstrap 4, pure JavasSript solution without jQuery.",
   "main": "dist/validator.js",
   "scripts": {
