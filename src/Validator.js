@@ -399,7 +399,10 @@ export default class Validator {
     return items;
   }
   getErrorMessage(el) {
-    return el.validationMessage || el.dataset["error"] || "Please fill out this field.";
+    if (el.validity.customError === true) {
+      return el.validationMessage || el.dataset["error"] || "Please fill out this field.";
+    }
+    return el.dataset["error"] || el.validationMessage || "Please fill out this field.";
   }
   getPluginErrorMessage(el, name) {
     return el.dataset[name + "Error"] || el.dataset["error"] || "Please fill out this field.";

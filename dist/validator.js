@@ -1,5 +1,5 @@
 /*!
- * native-validator-bootstrap v0.0.5
+ * native-validator-bootstrap v0.0.6
  * Copyright 2020 Iskandar Jamil <iskandar.jamil@yahoo.com>
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -1050,7 +1050,11 @@ var Validator_Validator = /*#__PURE__*/function () {
   }, {
     key: "getErrorMessage",
     value: function getErrorMessage(el) {
-      return el.validationMessage || el.dataset["error"] || "Please fill out this field.";
+      if (el.validity.customError === true) {
+        return el.validationMessage || el.dataset["error"] || "Please fill out this field.";
+      }
+
+      return el.dataset["error"] || el.validationMessage || "Please fill out this field.";
     }
   }, {
     key: "getPluginErrorMessage",
