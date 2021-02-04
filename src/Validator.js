@@ -3,20 +3,14 @@ import { getClosest } from "./common/getClosest";
 
 export default class Validator {
   constructor(target, options) {
-    this.$target =
-      typeof target === "object" ? target : document.querySelector(target);
-    this.$submitBtn = this.$target
-      ? this.$target.querySelector('[type="submit"]')
-      : null;
-    this.$resetBtn = this.$target
-      ? this.$target.querySelector('[type="reset"]')
-      : null;
+    this.$target = typeof target === "object" ? target : document.querySelector(target);
+    this.$submitBtn = this.$target ? this.$target.querySelector('[type="submit"]') : null;
+    this.$resetBtn = this.$target ? this.$target.querySelector('[type="reset"]') : null;
     this.$fields = [];
     this.options = options || {};
     this.plugins = {};
     this.selectorElement = "input, select, textarea";
-    this.selector =
-      ':input:not([type="hidden"]):not([type="submit"]):not([type="reset"]):not(button)';
+    this.selector = ':input:not([type="hidden"]):not([type="submit"]):not([type="reset"]):not(button)';
     this.isValid = false;
     this.delay = 500;
     this.offsetFocus = 50;
@@ -38,7 +32,7 @@ export default class Validator {
         delay: this.delay,
         offsetFocus: this.offsetFocus,
       },
-      this.options
+      this.options,
     );
 
     this.installPlugin();
@@ -115,13 +109,11 @@ export default class Validator {
 
     this.$fields = [];
     for (let i = 0; i < elements.length; i++) {
-      this.$target
-        .querySelectorAll(elements[i].trim() + selector)
-        .forEach((el) => {
-          if (el.offsetParent !== null) {
-            this.$fields.push(el);
-          }
-        });
+      this.$target.querySelectorAll(elements[i].trim() + selector).forEach((el) => {
+        if (el.offsetParent !== null) {
+          this.$fields.push(el);
+        }
+      });
     }
 
     this.$target.setAttribute("novalidate", true);
@@ -208,12 +200,26 @@ export default class Validator {
     });
   }
   validateEach(el) {
+    let hasDefaultError = false;
+
     if (el.checkValidity) {
-      if (!el.checkValidity() && !el.validity.valid) {
-        this.setError(el);
-      } else {
-        this.clearError(el);
+      if (!el.checkValidity()) {
+        for (var key in el.validity) {
+          if (key === "customError") {
+            continue;
+          }
+          if (el.validity[key] === true) {
+            this.setError(el);
+            hasDefaultError = true;
+          }
+        }
       }
+    }
+
+    if (hasDefaultError) {
+      return;
+    } else {
+      this.clearError(el);
     }
 
     for (let key in this.plugins) {
@@ -228,6 +234,7 @@ export default class Validator {
               el.setCustomValidity(this.getPluginErrorMessage(el, key));
             }
             this.setError(el);
+            return;
           } else {
             el.setCustomValidity("");
             this.clearError(el);
@@ -235,6 +242,8 @@ export default class Validator {
         }
       }
     }
+
+    this.clearError(el);
   }
 
   hasError() {
@@ -352,10 +361,7 @@ export default class Validator {
         this.isFocusing = true;
 
         window.scrollTo({
-          top:
-            Math.round($parent.getBoundingClientRect().top) +
-            Math.round(window.scrollY) +
-            -this.state.offsetFocus,
+          top: Math.round($parent.getBoundingClientRect().top) + Math.round(window.scrollY) + -this.state.offsetFocus,
           behavior: "smooth",
         });
         setTimeout(() => {
@@ -385,13 +391,7 @@ export default class Validator {
     let items = [];
 
     el.forEach((item) => {
-      if (
-        !!(
-          item.offsetWidth ||
-          item.offsetHeight ||
-          item.getClientRects().length
-        )
-      ) {
+      if (!!(item.offsetWidth || item.offsetHeight || item.getClientRects().length)) {
         items.push(item);
       }
     });
@@ -399,18 +399,10 @@ export default class Validator {
     return items;
   }
   getErrorMessage(el) {
-    return (
-      el.dataset["error"] ||
-      el.validationMessage ||
-      "Please fill out this field."
-    );
+    return el.validationMessage || el.dataset["error"] || "Please fill out this field.";
   }
   getPluginErrorMessage(el, name) {
-    return (
-      el.dataset[name + "Error"] ||
-      el.dataset["error"] ||
-      "Please fill out this field."
-    );
+    return el.dataset[name + "Error"] || el.dataset["error"] || "Please fill out this field.";
   }
   getPluginName(name) {
     return "plugin" + name[0].toUpperCase() + name.slice(1).toLowerCase();

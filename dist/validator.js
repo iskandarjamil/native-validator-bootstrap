@@ -1,5 +1,5 @@
 /*!
- * native-validator-bootstrap v0.0.3
+ * native-validator-bootstrap v0.0.5
  * Copyright 2020 Iskandar Jamil <iskandar.jamil@yahoo.com>
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -827,27 +827,43 @@ var Validator_Validator = /*#__PURE__*/function () {
   }, {
     key: "validateEach",
     value: function validateEach(el) {
+      var hasDefaultError = false;
+
       if (el.checkValidity) {
-        if (!el.checkValidity() && !el.validity.valid) {
-          this.setError(el);
-        } else {
-          this.clearError(el);
+        if (!el.checkValidity()) {
+          for (var key in el.validity) {
+            if (key === "customError") {
+              continue;
+            }
+
+            if (el.validity[key] === true) {
+              this.setError(el);
+              hasDefaultError = true;
+            }
+          }
         }
       }
 
-      for (var key in this.plugins) {
-        if (this.plugins.hasOwnProperty(key)) {
-          if (el.hasAttribute("data-" + key)) {
-            if (!this.plugins[key].validate(el, el.getAttribute("data-" + key))) {
-              if (typeof this.plugins[key]["error"] === "function") {
-                el.setCustomValidity(this.plugins[key]["error"](el));
-              } else if (typeof this.plugins[key]["error"] !== "undefined") {
-                el.setCustomValidity(this.plugins[key]["error"]);
+      if (hasDefaultError) {
+        return;
+      } else {
+        this.clearError(el);
+      }
+
+      for (var _key in this.plugins) {
+        if (this.plugins.hasOwnProperty(_key)) {
+          if (el.hasAttribute("data-" + _key)) {
+            if (!this.plugins[_key].validate(el, el.getAttribute("data-" + _key))) {
+              if (typeof this.plugins[_key]["error"] === "function") {
+                el.setCustomValidity(this.plugins[_key]["error"](el));
+              } else if (typeof this.plugins[_key]["error"] !== "undefined") {
+                el.setCustomValidity(this.plugins[_key]["error"]);
               } else {
-                el.setCustomValidity(this.getPluginErrorMessage(el, key));
+                el.setCustomValidity(this.getPluginErrorMessage(el, _key));
               }
 
               this.setError(el);
+              return;
             } else {
               el.setCustomValidity("");
               this.clearError(el);
@@ -855,6 +871,8 @@ var Validator_Validator = /*#__PURE__*/function () {
           }
         }
       }
+
+      this.clearError(el);
     }
   }, {
     key: "hasError",
@@ -1032,7 +1050,7 @@ var Validator_Validator = /*#__PURE__*/function () {
   }, {
     key: "getErrorMessage",
     value: function getErrorMessage(el) {
-      return el.dataset["error"] || el.validationMessage || "Please fill out this field.";
+      return el.validationMessage || el.dataset["error"] || "Please fill out this field.";
     }
   }, {
     key: "getPluginErrorMessage",
