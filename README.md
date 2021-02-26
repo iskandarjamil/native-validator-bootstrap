@@ -20,8 +20,8 @@ import Validator from "native-validator-bootstrap";
 new Validator("form");
 
 // or
-
-new Valudator("form", {
+//quick question, should this be "new Validator". I saw it and wasn't sure.
+new Validator("form", {
   // options
 });
 ```
